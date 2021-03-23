@@ -8,7 +8,7 @@ vector<vector<int>> graph_trans;
 
 void readGraph() {
 	int n, m;
-	scanf("%d,%d", &n, &m);
+	scanf("%d %d", &n, &m);
 	// Alocar o espaco para o grafo
 	graph = vector<vector<int>>(n, vector<int>());
 	graph_trans = vector<vector<int>>(n, vector<int>());
