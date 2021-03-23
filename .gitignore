@@ -1,6 +1,6 @@
 # Custom
 *.pdf
-*.docx
+*.docx*
 
 # Prerequisites
 *.d
