@@ -3,16 +3,16 @@
 
 using namespace std;
 
-vector<vector<int>> graph;
+vector<vector<int>> dag;
 
-void readGraph() {
+void parseDAG() {
 	int n, m;
 	scanf("%d %d", &n, &m);
-	graph = vector<vector<int>>(n, vector<int>());
+	dag = vector<vector<int>>(n, vector<int>());
 	for (int i=0; i<m; i++) {
 		int x, y;
 		scanf("%d %d", &x, &y);
-		graph[x-1].push_back(y-1);
+		dag[x-1].push_back(y-1);
 	}
 }
 
