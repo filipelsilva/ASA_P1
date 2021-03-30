@@ -38,7 +38,7 @@ public:
 	}
 };
 
-vector<Node*> dag;
+vector<Node> dag;
 
 /* int DFS_Visit(Node n, time) { */
 
@@ -58,14 +58,13 @@ void parseDAG() {
 	cin >> n >> m;
 	dag.reserve(n);
 	for (int i = 0; i < n; i++) {
-		Node tmp = Node(i);
-		dag.push_back(&tmp);
+		dag.push_back(Node(i));
 	}
 	for (int i = 0; i < m; i++) {
 		int x, y;
 		cin >> x >> y;
-		dag[x-1]->addOut(dag[y-1]);
-		dag[y-1]->addIn(dag[x-1]);
+		dag[x-1].addOut(&dag[y-1]);
+		dag[y-1].addIn(&dag[x-1]);
 	}
 }
 
@@ -75,9 +74,9 @@ void dfsoubfsnaosabemos() {}
 
 int main(int argc, char *argv[]) {
 	parseDAG();
-	for (Node* n : dag) {
-		cout << "Node " << n->id + 1 << endl;
-		for (Node* nn : n->in) {
+	for (Node n : dag) {
+		cout << "Node " << n.id + 1 << endl;
+		for (Node* nn : n.out) {
 			printf("%d\n", nn->id + 1);
 		}
 	}
