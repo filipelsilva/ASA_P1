@@ -38,7 +38,7 @@ public:
 	}
 };
 
-vector<Node> dag;
+vector<Node*> dag;
 
 /* int DFS_Visit(Node n, time) { */
 
@@ -54,26 +54,19 @@ vector<Node> dag;
 /* } */
 
 void parseDAG() {
-	/* int n, m; */
-	/* cin >> n >> m; */
-	int n = 10;
+	int n, m;
+	cin >> n >> m;
 	dag.reserve(n);
 	for (int i = 0; i < n; i++) {
-		dag.push_back(Node(i));
+		Node tmp = Node(i);
+		dag.push_back(&tmp);
 	}
-	dag[4].addOut(&dag[3]);
-	dag[4].addOut(&dag[8]);
-	dag[4].addIn(&dag[5]);
-	dag[4].addIn(&dag[7]);
-	for (Node* n : dag[4].out) {
-		printf("%d\n", n->id);
+	for (int i = 0; i < m; i++) {
+		int x, y;
+		cin >> x >> y;
+		dag[x-1]->addOut(dag[y-1]);
+		dag[y-1]->addIn(dag[x-1]);
 	}
-	/* for (int i = 0; i < m; i++) { */
-	/* 	int x, y; */
-	/* 	cin >> x >> y; */
-	/* 	dag[x-1].addOut(&dag[y-1]); */
-	/* 	dag[y-1].addIn(&dag[x-1]); */
-	/* } */
 }
 
 void topologicalSort() {}
@@ -82,9 +75,10 @@ void dfsoubfsnaosabemos() {}
 
 int main(int argc, char *argv[]) {
 	parseDAG();
-	for (Node n : dag) {
-		for (Node* nn : n.in) {
-			printf("%d\n", nn->id);
+	for (Node* n : dag) {
+		cout << "Node " << n->id + 1 << endl;
+		for (Node* nn : n->in) {
+			printf("%d\n", nn->id + 1);
 		}
 	}
 	return 0;
