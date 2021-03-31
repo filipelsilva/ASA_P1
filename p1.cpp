@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <set>
 #include <cassert>
 
 #include <cstdio>
@@ -11,14 +12,19 @@
 using namespace std;
 
 class Node {
+private:
+    bool operator <(const Node& other) {
+        return id < other.id;
+    }
+
 public:
 	int id;
 	int dist = 0;
 	int color = WHITE;
 	int close;
 	Node* father = NULL;
-	vector<Node*> in = vector<Node*>();
-	vector<Node*> out = vector<Node*>();
+	set<Node*> in;
+	set<Node*> out;
 
 	Node(int id) {
 		this->id = id;
@@ -78,14 +84,10 @@ void parseDAG() {
 	for (int i = 0; i < m; i++) {
 		int x, y;
 		cin >> x >> y;
-		dag[x-1]->out.push_back(dag[y-1]);
-		dag[y-1]->in.push_back(dag[x-1]);
+		dag[x-1]->out.insert(dag[y-1]);
+		dag[y-1]->in.insert(dag[x-1]);
 	}
 }
-
-void topologicalSort() {}
-
-void dfsoubfsnaosabemos() {}
 
 void cleanProgram() {
 	for (Node* n : dag) {
@@ -93,10 +95,9 @@ void cleanProgram() {
 	}
 }
 
-
 int main(int argc, char *argv[]) {
 	parseDAG();
-	/* vector<Node*> sources = findSources(); */
+	vector<Node*> sources = findSources();
 	DFS();
 
 	for (Node* n : dag) {
@@ -104,9 +105,10 @@ int main(int argc, char *argv[]) {
 		for (Node* nn : n->out) {
 			cout << nn->id + 1 << endl;
 		}
-		cout << "\tFather: " << n->father + 1 << endl;
 		cout << "\tEnd timer: " << n->close << endl;
 		cout << "\tColor: " << n->color << endl;
+		if (n->father != NULL)
+			cout << "\tFather: " << n->father->id + 1 << endl;
 	}
 
 	cleanProgram();
