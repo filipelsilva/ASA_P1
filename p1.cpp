@@ -31,14 +31,14 @@ public:
 	}
 };
 
-int timer;
+int timer = 0;
 vector<Node*> dag;
+vector<Node*> topological;
 
 int DFS_Visit(Node* n) {
 	assert(n->color == WHITE);
 	n->color = GREY;
 	timer++;
-	n->dist = timer;
 	for (Node* next : n->out) {
 		if (next->color == WHITE) {
 			next->father = n;
@@ -48,6 +48,7 @@ int DFS_Visit(Node* n) {
 	n->color = BLACK;
 	timer++;
 	n->close = timer;
+	topological.push_back(n);
 	return timer;
 }
 
@@ -95,21 +96,31 @@ void cleanProgram() {
 	}
 }
 
+int max_dist(Node* n) {
+	int max = 0;
+	for (Node* parent : n->in) {
+		if (parent->dist > max) {
+			max = parent->dist;
+		}
+	}
+	return max;
+}
+
 int main(int argc, char *argv[]) {
 	parseDAG();
 	vector<Node*> sources = findSources();
 	DFS();
-
-	for (Node* n : dag) {
-		cout << "Node " << n->id + 1 << endl;
-		for (Node* nn : n->out) {
-			cout << nn->id + 1 << endl;
+	int max = 0;
+	for (auto i = topological.rbegin(); i != topological.rend(); i++) {
+		Node* n = *i;
+		/* cout << "Node " << n->id + 1 << endl; */
+		n->dist = max_dist(n) + 1;
+		/* cout << n->dist << endl; */
+		if (n->dist > max) {
+			max = n->dist;
 		}
-		cout << "\tEnd timer: " << n->close << endl;
-		cout << "\tColor: " << n->color << endl;
-		if (n->father != NULL)
-			cout << "\tFather: " << n->father->id + 1 << endl;
 	}
+	cout << sources.size() << " " << max << endl;
 
 	cleanProgram();
 	return 0;
