@@ -21,11 +21,11 @@ public:
 	int id;
 	int dist = 0;
 	int color = WHITE;
-	int close;
-	Node* father = NULL;
-	set<Node*> in;
-	set<Node*> out;
-
+	int close = 0;
+	/* set<Node*> in; */
+	/* set<Node*> out; */
+	vector<Node*> in = vector<Node*>();
+	vector<Node*> out = vector<Node*>();
 	Node(int id) {
 		this->id = id;
 	}
@@ -41,7 +41,6 @@ int DFS_Visit(Node* n) {
 	timer++;
 	for (Node* next : n->out) {
 		if (next->color == WHITE) {
-			next->father = n;
 			timer = DFS_Visit(next);
 		}
 	}
@@ -50,19 +49,6 @@ int DFS_Visit(Node* n) {
 	n->close = timer;
 	topological.push_back(n);
 	return timer;
-}
-
-void DFS() {
-	for (Node* n : dag) {
-		n->color = WHITE;
-		n->father = NULL;
-	}
-	timer = 0;
-	for (Node* n : dag) {
-		if (n->color == WHITE) {
-			timer = DFS_Visit(n);
-		}
-	}
 }
 
 vector<Node*> findSources() {
@@ -85,8 +71,8 @@ void parseDAG() {
 	for (int i = 0; i < m; i++) {
 		int x, y;
 		cin >> x >> y;
-		dag[x-1]->out.insert(dag[y-1]);
-		dag[y-1]->in.insert(dag[x-1]);
+		dag[x-1]->out.push_back(dag[y-1]);
+		dag[y-1]->in.push_back(dag[x-1]);
 	}
 }
 
@@ -109,7 +95,9 @@ int max_dist(Node* n) {
 int main(int argc, char *argv[]) {
 	parseDAG();
 	vector<Node*> sources = findSources();
-	DFS();
+	for (Node* n : sources) {
+		DFS_Visit(n);
+	}
 	int max = 0;
 	for (auto i = topological.rbegin(); i != topological.rend(); i++) {
 		Node* n = *i;
@@ -120,8 +108,13 @@ int main(int argc, char *argv[]) {
 			max = n->dist;
 		}
 	}
-	cout << sources.size() << " " << max << endl;
-
+	/* cout << sources.size() << " " << max << endl; */
+	for (Node* n : dag) {
+		cout << "Node " << n->id + 1 << endl;
+		for (Node* nn : n->out) {
+			cout << nn->id + 1 << endl;
+		}
+	}
 	cleanProgram();
 	return 0;
 }
