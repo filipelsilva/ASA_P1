@@ -51,6 +51,18 @@ int DFS_Visit(Node* n) {
 	return timer;
 }
 
+void DFS() {
+	for (Node* n : dag) {
+		n->color = WHITE;
+	}
+	int time = 0;
+	for (Node* n : dag) {
+		if (n->color == White) {
+			time = DFS_Visit(n);
+		}
+	}
+}
+
 vector<Node*> findSources() {
 	vector<Node*> ret = vector<Node*>();
 	for (Node* n : dag) {
@@ -108,13 +120,13 @@ int main(int argc, char *argv[]) {
 			max = n->dist;
 		}
 	}
-	/* cout << sources.size() << " " << max << endl; */
-	for (Node* n : dag) {
-		cout << "Node " << n->id + 1 << endl;
-		for (Node* nn : n->out) {
-			cout << nn->id + 1 << endl;
-		}
-	}
+	cout << sources.size() << " " << max << endl;
+	/* for (Node* n : dag) { */
+	/* 	cout << "Node " << n->id + 1 << endl; */
+	/* 	for (Node* nn : n->out) { */
+	/* 		cout << nn->id + 1 << endl; */
+	/* 	} */
+	/* } */
 	cleanProgram();
 	return 0;
 }
