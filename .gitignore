@@ -1,6 +1,7 @@
 # Custom
 *.pdf
 *.docx*
+vgcore*
 
 # Prerequisites
 *.d
