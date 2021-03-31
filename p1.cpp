@@ -2,17 +2,15 @@
 #include <vector>
 #include <stack>
 
-#define WHITE 0
-#define GREY 1
-#define BLACK 2
-
 using namespace std;
+
+enum colors { WHITE, GREY, BLACK };
 
 class Node {
 public:
 	int id;
 	int dist = 0;
-	int color = WHITE;
+	colors color = WHITE;
 	vector<Node*> in = vector<Node*>();
 	vector<Node*> out = vector<Node*>();
 
