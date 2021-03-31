@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <set>
 #include <stack>
 #include <cassert>
 
@@ -14,6 +15,7 @@ public:
 	int id;
 	int dist = 0;
 	int color = WHITE;
+	int close = 0;
 	vector<Node*> in = vector<Node*>();
 	vector<Node*> out = vector<Node*>();
 
@@ -27,19 +29,29 @@ vector<Node*> dag;
 vector<Node*> topological;
 vector<Node*> sources;
 
-void DFS_Visit(Node* n) {
+void showstack(stack <Node*> s)
+{
+	cout << "Stack\n";
+    while (!s.empty())
+    {
+        cout << '\t' << s.top()->id + 1;
+        s.pop();
+    }
+    cout << '\n';
+}
+
+void DFS_Visit_nonRecursive(Node* n) {
 	assert(n->color == WHITE);
 	stack<Node*> toVisit;
 	toVisit.push(n);
-
 	while (!toVisit.empty()) {
 		Node* node = toVisit.top();
 		node->color = GREY;
-
-		for (Node* next : node->out)
-			if (next->color == WHITE)
+		for (Node* next : node->out) {
+			if (next->color == WHITE) {
 				toVisit.push(next);
-
+			}
+		}
 		if (toVisit.top() == node) {
 			node->color = BLACK;
 			topological.push_back(node);
@@ -48,31 +60,52 @@ void DFS_Visit(Node* n) {
 	}
 }
 
-void DFS() {
-	for (Node* n : dag)
-		n->color = WHITE;
-
-	timer = 0;
-	for (Node* n : dag)
-		if (n->color == WHITE)
-			DFS_Visit(n);
+int DFS_Visit(Node* n) {
+	assert(n->color == WHITE);
+	n->color = GREY;
+	timer++;
+	for (Node* next : n->out) {
+		if (next->color == WHITE) {
+			timer = DFS_Visit(next);
+		}
+	}
+	n->color = BLACK;
+	timer++;
+	n->close = timer;
+	topological.push_back(n);
+	return timer;
 }
 
-int countSources() {
-	int ret = 0;
-	for (Node* n : dag)
-		if (n->in.empty())
-			ret++;
+void DFS() {
+	for (Node* n : dag) {
+		n->color = WHITE;
+	}
+	timer = 0;
+	for (Node* n : dag) {
+		if (n->color == WHITE) {
+			/* timer = DFS_Visit(n); */
+			DFS_Visit_nonRecursive(n);
+		}
+	}
+}
 
+vector<Node*> findSources() {
+	vector<Node*> ret = vector<Node*>();
+	for (Node* n : dag) {
+		if (n->in.empty()) {
+			ret.push_back(n);
+		}
+	}
 	return ret;
 }
 
 void parseDAG() {
 	int n, m;
 	cin >> n >> m;
-	for (int i = 0; i < n; i++)
-		dag.push_back(new Node(i));
-
+	for (int i = 0; i < n; i++) {
+		Node* tmp = new Node(i);
+		dag.push_back(tmp);
+	}
 	for (int i = 0; i < m; i++) {
 		int x, y;
 		cin >> x >> y;
@@ -82,15 +115,17 @@ void parseDAG() {
 }
 
 void cleanGraph() {
-	for (Node* n : dag)
+	for (Node* n : dag) {
 		delete n;
+	}
 }
 
 int max_dist(Node* n) {
 	int max = 0;
 	for (Node* parent : n->in) {
-		if (parent->dist > max)
+		if (parent->dist > max) {
 			max = parent->dist;
+		}
 	}
 	return max;
 }
@@ -101,7 +136,8 @@ int main(int argc, char *argv[]) {
 
 	parseDAG();
 
-	times = countSources();
+	sources = findSources();
+	times = sources.size();
 
 	DFS();
 
