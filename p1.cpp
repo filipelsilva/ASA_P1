@@ -80,6 +80,16 @@ int countSources() {
 	return ret;
 }
 
+vector<Node*> findSources() {
+	vector<Node*> ret = vector<Node*>();
+	for (Node* n : dag) {
+		if (n->in.empty()) {
+			ret.push_back(n);
+		}
+	}
+	return ret;
+}
+
 void parseDAG() {
 	int n, m;
 	cin >> n >> m;
@@ -114,9 +124,13 @@ int main(int argc, char *argv[]) {
 
 	parseDAG();
 
-	times = countSources();
+	/* times = countSources(); */
+	/* DFS(); */
 
-	DFS();
+	vector<Node*> sources = findSources();
+	times = sources.size();
+	for (Node* n : sources)
+		DFS_Visit(n);
 
 	for (auto i = topological.rbegin(); i != topological.rend(); i++) {
 		Node* n = *i;
