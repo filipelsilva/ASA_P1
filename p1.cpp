@@ -3,8 +3,6 @@
 #include <set>
 #include <cassert>
 
-#include <cstdio>
-
 #define WHITE 0
 #define GREY 1
 #define BLACK 2
@@ -12,10 +10,10 @@
 using namespace std;
 
 class Node {
-private:
-    bool operator <(const Node& other) {
-        return id < other.id;
-    }
+/* private: */
+/*     bool operator <(const Node& other) { */
+/*         return id < other.id; */
+/*     } */
 
 public:
 	int id;
