@@ -26,7 +26,7 @@ public:
 };
 
 int timer;
-vector<Node> dag;
+vector<Node*> dag;
 
 int DFS_Visit(Node* n) {
 	assert(n->color == WHITE);
@@ -46,23 +46,23 @@ int DFS_Visit(Node* n) {
 }
 
 void DFS() {
-	for (Node n : dag) {
-		n.color = WHITE;
-		n.father = NULL;
+	for (Node* n : dag) {
+		n->color = WHITE;
+		n->father = NULL;
 	}
 	timer = 0;
-	for (Node n : dag) {
-		if (n.color == WHITE) {
-			timer = DFS_Visit(&n);
+	for (Node* n : dag) {
+		if (n->color == WHITE) {
+			timer = DFS_Visit(n);
 		}
 	}
 }
 
 vector<Node*> findSources() {
 	vector<Node*> ret = vector<Node*>();
-	for (Node n : dag) {
-		if (n.in.empty()) {
-			ret.push_back(&n);
+	for (Node* n : dag) {
+		if (n->in.empty()) {
+			ret.push_back(n);
 		}
 	}
 	return ret;
@@ -72,13 +72,14 @@ void parseDAG() {
 	int n, m;
 	cin >> n >> m;
 	for (int i = 0; i < n; i++) {
-		dag.push_back(Node(i));
+		Node* tmp = new Node(i);
+		dag.push_back(tmp);
 	}
 	for (int i = 0; i < m; i++) {
 		int x, y;
 		cin >> x >> y;
-		dag[x-1].out.push_back(&dag[y-1]);
-		dag[y-1].in.push_back(&dag[x-1]);
+		dag[x-1]->out.push_back(dag[y-1]);
+		dag[y-1]->in.push_back(dag[x-1]);
 	}
 }
 
@@ -86,15 +87,28 @@ void topologicalSort() {}
 
 void dfsoubfsnaosabemos() {}
 
+void cleanProgram() {
+	for (Node* n : dag) {
+		delete n;
+	}
+}
+
+
 int main(int argc, char *argv[]) {
 	parseDAG();
 	/* vector<Node*> sources = findSources(); */
 	DFS();
-	for (Node n : dag) {
-		cout << "Node " << n.id + 1 << endl;
-		cout << "\tFather: " << n.id + 1 << endl;
-		cout << "\tEnd timer: " << n.close << endl;
-		cout << "\tColor: " << n.color << endl;
+
+	for (Node* n : dag) {
+		cout << "Node " << n->id + 1 << endl;
+		for (Node* nn : n->out) {
+			cout << nn->id + 1 << endl;
+		}
+		cout << "\tFather: " << n->father + 1 << endl;
+		cout << "\tEnd timer: " << n->close << endl;
+		cout << "\tColor: " << n->color << endl;
 	}
+
+	cleanProgram();
 	return 0;
 }
