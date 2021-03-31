@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <stack>
-#include <cassert>
 
 #define WHITE 0
 #define GREY 1
@@ -28,7 +27,6 @@ vector<Node*> topological;
 vector<Node*> sources;
 
 void DFS_Visit(Node* n) {
-	assert(n->color == WHITE);
 	stack<Node*> toVisit;
 	toVisit.push(n);
 
@@ -47,6 +45,23 @@ void DFS_Visit(Node* n) {
 		}
 	}
 }
+
+//int DFS_Visit(Node* n) {
+//	assert(n->color == WHITE);
+//	n->color = GREY;
+//	timer++;
+//	n->dist = timer;
+//	for (Node* next : n->out) {
+//		if (next->color == WHITE) {
+//			next->father = n;
+//			timer = DFS_Visit(next);
+//		}
+//	}
+//	n->color = BLACK;
+//	timer++;
+//	n->close = timer;
+//	return timer;
+//}
 
 void DFS() {
 	for (Node* n : dag)
@@ -88,10 +103,10 @@ void cleanGraph() {
 
 int max_dist(Node* n) {
 	int max = 0;
-	for (Node* parent : n->in) {
+	for (Node* parent : n->in)
 		if (parent->dist > max)
 			max = parent->dist;
-	}
+
 	return max;
 }
 
