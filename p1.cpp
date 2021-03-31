@@ -55,10 +55,10 @@ void DFS() {
 	for (Node* n : dag) {
 		n->color = WHITE;
 	}
-	int time = 0;
+	timer = 0;
 	for (Node* n : dag) {
-		if (n->color == White) {
-			time = DFS_Visit(n);
+		if (n->color == WHITE) {
+			timer = DFS_Visit(n);
 		}
 	}
 }
@@ -106,10 +106,14 @@ int max_dist(Node* n) {
 
 int main(int argc, char *argv[]) {
 	parseDAG();
-	vector<Node*> sources = findSources();
-	for (Node* n : sources) {
-		DFS_Visit(n);
-	}
+
+	vector<Node*> sources = findSources(); // TODO talvez se possa fazer retornar apenas int
+
+	DFS();
+	/* for (Node* n : sources) { */ // TODO isto ou DFS (provavelmente DFS)
+	/* 	DFS_Visit(n); */
+	/* } */
+
 	int max = 0;
 	for (auto i = topological.rbegin(); i != topological.rend(); i++) {
 		Node* n = *i;
