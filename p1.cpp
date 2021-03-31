@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <stack>
 #include <cassert>
 
 #define WHITE 0
@@ -31,35 +32,41 @@ public:
 
 int timer = 0;
 vector<Node*> dag;
-vector<Node*> topological;
+/* vector<Node*> topological; */
+vector<Node*> sources;
 
-int DFS_Visit(Node* n) {
-	assert(n->color == WHITE);
-	n->color = GREY;
-	timer++;
-	for (Node* next : n->out) {
-		if (next->color == WHITE) {
-			timer = DFS_Visit(next);
-		}
-	}
-	n->color = BLACK;
-	timer++;
-	n->close = timer;
-	topological.push_back(n);
-	return timer;
-}
+/* void DFS_Visit_nonRecursive(Node* n) { */
+/* 	stack<Node*> toVisit; */
+/* 	toVisit.push(n); */
+/* } */
 
-void DFS() {
-	for (Node* n : dag) {
-		n->color = WHITE;
-	}
-	timer = 0;
-	for (Node* n : dag) {
-		if (n->color == WHITE) {
-			timer = DFS_Visit(n);
-		}
-	}
-}
+/* int DFS_Visit(Node* n) { */
+/* 	assert(n->color == WHITE); */
+/* 	n->color = GREY; */
+/* 	timer++; */
+/* 	for (Node* next : n->out) { */
+/* 		if (next->color == WHITE) { */
+/* 			timer = DFS_Visit(next); */
+/* 		} */
+/* 	} */
+/* 	n->color = BLACK; */
+/* 	timer++; */
+/* 	n->close = timer; */
+/* 	topological.push_back(n); */
+/* 	return timer; */
+/* } */
+
+/* void DFS() { */
+/* 	for (Node* n : dag) { */
+/* 		n->color = WHITE; */
+/* 	} */
+/* 	timer = 0; */
+/* 	for (Node* n : dag) { */
+/* 		if (n->color == WHITE) { */
+/* 			timer = DFS_Visit(n); */
+/* 		} */
+/* 	} */
+/* } */
 
 vector<Node*> findSources() {
 	vector<Node*> ret = vector<Node*>();
@@ -102,33 +109,61 @@ int max_dist(Node* n) {
 	return max;
 }
 
+int longestSequence() {
+	int max = 0;
+	for (Node* n : sources) {
+		stack<Node*> toVisit;
+		toVisit.push(n);
+
+		while (!toVisit.empty()) {
+			Node* node = toVisit.top();
+			toVisit.pop();
+
+			if (node->in.empty())
+				node->dist = 0;
+			else
+				node->dist = max_dist(node) + 1;
+
+			if (node->dist > max)
+				max = node->dist;
+
+			for (Node* child : node->out)
+				toVisit.push(child);
+		}
+	}
+	return max + 1;
+}
+
 int main(int argc, char *argv[]) {
 	parseDAG();
 
-	vector<Node*> sources = findSources(); // TODO talvez se possa fazer retornar apenas int
+	sources = findSources();
+	int seq = longestSequence();
 
-	DFS();
+	/* DFS(); */
 	/* for (Node* n : sources) { */ // TODO isto ou DFS (provavelmente DFS)
 	/* 	DFS_Visit(n); */
 	/* } */
 
-	int max = 0;
-	for (auto i = topological.rbegin(); i != topological.rend(); i++) {
-		Node* n = *i;
-		/* cout << "Node " << n->id + 1 << endl; */
-		n->dist = max_dist(n) + 1;
-		/* cout << n->dist << endl; */
-		if (n->dist > max) {
-			max = n->dist;
-		}
-	}
-	cout << sources.size() << " " << max << endl;
-	/* for (Node* n : dag) { */
-	/* 	cout << "Node " << n->id + 1 << endl; */
-	/* 	for (Node* nn : n->out) { */
-	/* 		cout << nn->id + 1 << endl; */
+	/* for (auto i = topological.rbegin(); i != topological.rend(); i++) { */
+	/* 	Node* n = *i; */
+	/* 	/1* cout << "Node " << n->id + 1 << endl; *1/ */
+	/* 	n->dist = max_dist(n) + 1; */
+	/* 	/1* cout << n->dist << endl; *1/ */
+	/* 	if (n->dist > max) { */
+	/* 		max = n->dist; */
 	/* 	} */
 	/* } */
+
+	/* for (Node* n : dag) { */
+	/* 	cout << "Node " << n->id + 1 << endl; */
+	/* 	cout << n->dist << endl; */
+		/* for (Node* nn : n->out) { */
+		/* 	cout << nn->id + 1 << endl; */
+		/* } */
+	/* } */
+
+	cout << sources.size() << " " << seq << endl;
 	cleanProgram();
 	return 0;
 }
