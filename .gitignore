@@ -2,6 +2,7 @@
 *.pdf
 *.docx*
 vgcore*
+other/
 
 # Prerequisites
 *.d
