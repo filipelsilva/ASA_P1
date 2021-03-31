@@ -18,6 +18,7 @@ public:
 	int close = 0;
 	vector<Node*> in = vector<Node*>();
 	vector<Node*> out = vector<Node*>();
+
 	Node(int id) {
 		this->id = id;
 	}
@@ -28,10 +29,36 @@ vector<Node*> dag;
 vector<Node*> topological;
 vector<Node*> sources;
 
-/* void DFS_Visit_nonRecursive(Node* n) { */
-/* 	stack<Node*> toVisit; */
-/* 	toVisit.push(n); */
-/* } */
+void showstack(stack <Node*> s)
+{
+	cout << "Stack\n";
+    while (!s.empty())
+    {
+        cout << '\t' << s.top()->id + 1;
+        s.pop();
+    }
+    cout << '\n';
+}
+
+void DFS_Visit_nonRecursive(Node* n) {
+	assert(n->color == WHITE);
+	stack<Node*> toVisit;
+	toVisit.push(n);
+	while (!toVisit.empty()) {
+		Node* node = toVisit.top();
+		node->color = GREY;
+		for (Node* next : node->out) {
+			if (next->color == WHITE) {
+				toVisit.push(next);
+			}
+		}
+		if (toVisit.top() == node) {
+			node->color = BLACK;
+			topological.push_back(node);
+			toVisit.pop();
+		}
+	}
+}
 
 int DFS_Visit(Node* n) {
 	assert(n->color == WHITE);
@@ -56,7 +83,8 @@ void DFS() {
 	timer = 0;
 	for (Node* n : dag) {
 		if (n->color == WHITE) {
-			timer = DFS_Visit(n);
+			/* timer = DFS_Visit(n); */
+			DFS_Visit_nonRecursive(n);
 		}
 	}
 }
@@ -86,7 +114,7 @@ void parseDAG() {
 	}
 }
 
-void cleanProgram() {
+void cleanGraph() {
 	for (Node* n : dag) {
 		delete n;
 	}
@@ -130,7 +158,7 @@ int main(int argc, char *argv[]) {
 	/* } */
 
 	cout << times << " " << seq << endl;
-	cleanProgram();
+	cleanGraph();
 
 	return 0;
 }
