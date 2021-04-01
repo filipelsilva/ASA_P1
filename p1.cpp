@@ -23,63 +23,9 @@ vector<Node*> dag;
 vector<Node*> topological;
 vector<Node*> sources;
 
-void DFS_Visit(Node* n) {
-	stack<Node*> toVisit;
-	toVisit.push(n);
-
-	while (!toVisit.empty()) {
-		Node* node = toVisit.top();
-		node->color = GREY;
-
-		for (Node* next : node->out)
-			if (next->color == WHITE)
-				toVisit.push(next);
-
-		if (toVisit.top() == node) {
-			node->color = BLACK;
-			topological.push_back(node);
-			toVisit.pop();
-		}
-	}
-}
-
-void DFS() {
-	for (Node* n : dag) {
-		n->color = WHITE;
-		if (n->color == WHITE)
-			DFS_Visit(n);
-	}
-}
-
-int countSources() {
-	int ret = 0;
-
+void cleanGraph() {
 	for (Node* n : dag)
-		if (n->in.empty())
-			ret++;
-
-	return ret;
-}
-
-void findSources() {
-	for (Node* n : dag)
-		if (n->in.empty())
-			sources.push_back(n);
-}
-
-void parseDAG() {
-	int n, m;
-	scanf("%d %d", &n, &m);
-
-	for (int i = 0; i < n; i++)
-		dag.push_back(new Node(i));
-
-	for (int i = 0; i < m; i++) {
-		int x, y;
-		scanf("%d %d", &x, &y);
-		dag[x-1]->out.push_back(dag[y-1]);
-		dag[y-1]->in.push_back(dag[x-1]);
-	}
+		delete n;
 }
 
 int max_dist(Node* n) {
@@ -105,9 +51,45 @@ int getMaxSequence() {
 	return seq;
 }
 
-void cleanGraph() {
+void DFS_Visit(Node* n) {
+	stack<Node*> toVisit;
+	toVisit.push(n);
+
+	while (!toVisit.empty()) {
+		Node* node = toVisit.top();
+		node->color = GREY;
+
+		for (Node* next : node->out)
+			if (next->color == WHITE)
+				toVisit.push(next);
+
+		if (toVisit.top() == node) {
+			node->color = BLACK;
+			topological.push_back(node);
+			toVisit.pop();
+		}
+	}
+}
+
+void findSources() {
 	for (Node* n : dag)
-		delete n;
+		if (n->in.empty())
+			sources.push_back(n);
+}
+
+void parseDAG() {
+	int n, m;
+	scanf("%d %d", &n, &m);
+
+	for (int i = 0; i < n; i++)
+		dag.push_back(new Node(i));
+
+	for (int i = 0; i < m; i++) {
+		int x, y;
+		scanf("%d %d", &x, &y);
+		dag[x-1]->out.push_back(dag[y-1]);
+		dag[y-1]->in.push_back(dag[x-1]);
+	}
 }
 
 int main(int argc, char *argv[]) {
