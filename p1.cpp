@@ -43,23 +43,6 @@ void DFS_Visit(Node* n) {
 	}
 }
 
-//int DFS_Visit(Node* n) {
-//	assert(n->color == WHITE);
-//	n->color = GREY;
-//	timer++;
-//	n->dist = timer;
-//	for (Node* next : n->out) {
-//		if (next->color == WHITE) {
-//			next->father = n;
-//			timer = DFS_Visit(next);
-//		}
-//	}
-//	n->color = BLACK;
-//	timer++;
-//	n->close = timer;
-//	return timer;
-//}
-
 void DFS() {
 	for (Node* n : dag)
 		n->color = WHITE;
@@ -80,17 +63,17 @@ int countSources() {
 
 vector<Node*> findSources() {
 	vector<Node*> ret = vector<Node*>();
-	for (Node* n : dag) {
-		if (n->in.empty()) {
+	for (Node* n : dag)
+		if (n->in.empty())
 			ret.push_back(n);
-		}
-	}
+
 	return ret;
 }
 
 void parseDAG() {
 	int n, m;
 	cin >> n >> m;
+
 	for (int i = 0; i < n; i++)
 		dag.push_back(new Node(i));
 
