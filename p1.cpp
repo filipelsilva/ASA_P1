@@ -1,4 +1,4 @@
-#include <iostream>
+#include <cstdio>
 #include <vector>
 #include <stack>
 
@@ -53,6 +53,7 @@ void DFS() {
 
 int countSources() {
 	int ret = 0;
+
 	for (Node* n : dag)
 		if (n->in.empty())
 			ret++;
@@ -68,26 +69,22 @@ void findSources() {
 
 void parseDAG() {
 	int n, m;
-	cin >> n >> m;
+	scanf("%d %d", &n, &m);
 
 	for (int i = 0; i < n; i++)
 		dag.push_back(new Node(i));
 
 	for (int i = 0; i < m; i++) {
 		int x, y;
-		cin >> x >> y;
+		scanf("%d %d", &x, &y);
 		dag[x-1]->out.push_back(dag[y-1]);
 		dag[y-1]->in.push_back(dag[x-1]);
 	}
 }
 
-void cleanGraph() {
-	for (Node* n : dag)
-		delete n;
-}
-
 int max_dist(Node* n) {
 	int max = 0;
+
 	for (Node* parent : n->in)
 		if (parent->dist > max)
 			max = parent->dist;
@@ -95,19 +92,8 @@ int max_dist(Node* n) {
 	return max;
 }
 
-int main(int argc, char *argv[]) {
-	int times = -1;
+int getMaxSequence() {
 	int seq = -1;
-
-	parseDAG();
-
-	/* times = countSources(); */
-	/* DFS(); */
-
-	findSources();
-	times = sources.size();
-	for (Node* n : sources)
-		DFS_Visit(n);
 
 	for (auto i = topological.rbegin(); i != topological.rend(); i++) {
 		Node* n = *i;
@@ -116,16 +102,28 @@ int main(int argc, char *argv[]) {
 			seq = n->dist;
 	}
 
-	/* for (Node* n : dag) { */
-	/* 	cout << "Node " << n->id + 1 << endl; */
-	/* 	cout << n->dist << endl; */
-		/* for (Node* nn : n->out) { */
-		/* 	cout << nn->id + 1 << endl; */
-		/* } */
-	/* } */
+	return seq;
+}
 
-	cout << times << " " << seq << endl;
+void cleanGraph() {
+	for (Node* n : dag)
+		delete n;
+}
+
+int main(int argc, char *argv[]) {
+	int times = -1;
+	int seq = -1;
+
+	parseDAG();
+	findSources();
+	times = sources.size();
+
+	for (Node* n : sources)
+		DFS_Visit(n);
+
+	seq = getMaxSequence();
+	printf("%d %d\n", times, seq);
+
 	cleanGraph();
-
 	return 0;
 }
