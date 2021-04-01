@@ -44,12 +44,11 @@ void DFS_Visit(Node* n) {
 }
 
 void DFS() {
-	for (Node* n : dag)
+	for (Node* n : dag) {
 		n->color = WHITE;
-
-	for (Node* n : dag)
 		if (n->color == WHITE)
 			DFS_Visit(n);
+	}
 }
 
 int countSources() {
@@ -61,13 +60,10 @@ int countSources() {
 	return ret;
 }
 
-vector<Node*> findSources() {
-	vector<Node*> ret = vector<Node*>();
+void findSources() {
 	for (Node* n : dag)
 		if (n->in.empty())
-			ret.push_back(n);
-
-	return ret;
+			sources.push_back(n);
 }
 
 void parseDAG() {
@@ -108,7 +104,7 @@ int main(int argc, char *argv[]) {
 	/* times = countSources(); */
 	/* DFS(); */
 
-	vector<Node*> sources = findSources();
+	findSources();
 	times = sources.size();
 	for (Node* n : sources)
 		DFS_Visit(n);
