@@ -64,7 +64,6 @@ void DFS() {
 	for (Node* n : dag)
 		n->color = WHITE;
 
-	timer = 0;
 	for (Node* n : dag)
 		if (n->color == WHITE)
 			DFS_Visit(n);
