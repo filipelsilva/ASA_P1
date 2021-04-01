@@ -135,9 +135,8 @@ int main(int argc, char *argv[]) {
 	for (auto i = topological.rbegin(); i != topological.rend(); i++) {
 		Node* n = *i;
 		n->dist = max_dist(n) + 1;
-		if (n->dist > seq) {
+		if (n->dist > seq)
 			seq = n->dist;
-		}
 	}
 
 	/* for (Node* n : dag) { */
