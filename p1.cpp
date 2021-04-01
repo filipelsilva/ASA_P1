@@ -19,7 +19,6 @@ public:
 	}
 };
 
-int timer = 0;
 vector<Node*> dag;
 vector<Node*> topological;
 vector<Node*> sources;
