@@ -6,7 +6,7 @@ all: p1.cpp randomDAG.cpp report.tex
 	pdflatex report.tex
 
 clean: p1.out randomDAG.out report.pdf
-	rm p1.out randomDAG.out report.pdf *.aux *.log
+	rm report.pdf *.out *.aux *.log
 
 test: p1.out
 	./p1.out < test.txt
