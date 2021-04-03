@@ -2,6 +2,11 @@
 #include <vector>
 #include <stack>
 
+/* Usando iostream, teriam que ser colocadas:
+ * ios_base::sync_with_stdio(false);
+ * cin.tie(NULL);
+ */
+
 using namespace std;
 
 enum colors { WHITE, GREY, BLACK };
