@@ -20,9 +20,20 @@
 
 \begin{document}
 \section*{Descrição do Problema e da Solução}
-O problema apresentado consiste em, dada uma sequência de dominós, determinar o menor número de dominós que seria preciso derrubar com a mão para que todos caíssem, e, nessas condições, qual seria o maior número de dominós que cairiam seguidos. A sequência de dominós é representada como um \textit{DAG} (Grafo Dirigido Acíclico).
+O problema apresentado consiste em, dada uma sequência de dominós, determinar o
+menor número de dominós que seria preciso derrubar com a mão para que todos
+caíssem, e, nessas condições, qual seria o maior número de dominós que cairiam
+seguidos. A sequência de dominós é representada como um \textit{DAG} (Grafo
+Dirigido Acíclico).
 
-Após análise do problema, apercebemo-nos de que o número mínimo de dominós a mandar abaixo seria o número de \textit{sources} presentes no \textit{DAG}. Para achar o maior número de dominós a cair em sequência, é necessário descobir as distâncias dos nós a um ponto de origem. Ordenando topologicamente o \textit{DAG} e fazendo a travessia dos \textit{sources} para os \textit{sinks}, atualizando as distâncias de um nó com base na distância máxima dentre as dos nós que lhe acedem, é possível determinar a distância máxima, resolvendo assim o problema.
+Após análise do problema, apercebemo-nos de que o número mínimo de dominós a
+mandar abaixo seria o número de \textit{sources} presentes no \textit{DAG}.
+Para achar o maior número de dominós a cair em sequência, é necessário descobir
+as distâncias dos nós a um ponto de origem. Ordenando topologicamente o
+\textit{DAG} e fazendo a travessia dos \textit{sources} para os \textit{sinks},
+atualizando as distâncias de um nó com base na distância máxima dentre as dos
+nós que lhe acedem, é possível determinar a distância máxima, resolvendo assim
+o problema.
 
 \textbf{Fontes: }
 \url{https://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/11-Graph/Docs/longest-path-in-dag.pdf}
