@@ -19,14 +19,29 @@ public:
 	}
 };
 
-vector<Node*> dag;
-vector<Node*> topological;
-vector<Node*> sources;
+class Graph {
+public:
+	int maxSequence = -1;
+	int numSources = -1;
 
-void cleanGraph() {
-	for (Node* n : dag)
-		delete n;
-}
+	vector<Node*> nodes = vector<Node*>();
+	vector<Node*> topological = vector<Node*>();
+	vector<Node*> sources = vector<Node*>();
+
+	void getMaxSequence();
+	void DFS_Visit(Node* n);
+	void findSources();
+
+	void DFS_VisitSources() {
+		for (Node* n : this->sources)
+			DFS_Visit(n);
+	}
+
+	void clean() {
+		for (Node* n : this->nodes)
+			delete n;
+	}
+};
 
 int max_dist(Node* n) {
 	int max = 0;
@@ -38,20 +53,16 @@ int max_dist(Node* n) {
 	return max;
 }
 
-int getMaxSequence() {
-	int seq = -1;
-
-	for (auto i = topological.rbegin(); i != topological.rend(); i++) {
+void Graph::getMaxSequence() {
+	for (auto i = this->topological.rbegin(); i != this->topological.rend(); i++) {
 		Node* n = *i;
 		n->dist = max_dist(n) + 1;
-		if (n->dist > seq)
-			seq = n->dist;
+		if (n->dist > this->maxSequence)
+			this->maxSequence = n->dist;
 	}
-
-	return seq;
 }
 
-void DFS_Visit(Node* n) {
+void Graph::DFS_Visit(Node* n) {
 	stack<Node*> toVisit;
 	toVisit.push(n);
 
@@ -65,47 +76,48 @@ void DFS_Visit(Node* n) {
 
 		if (toVisit.top() == node) {
 			node->color = BLACK;
-			topological.push_back(node);
+			this->topological.push_back(node);
 			toVisit.pop();
 		}
 	}
 }
 
-void findSources() {
-	for (Node* n : dag)
+void Graph::findSources() {
+	for (Node* n : this->nodes)
 		if (n->in.empty())
-			sources.push_back(n);
+			this->sources.push_back(n);
+
+	this->numSources = this->sources.size();
 }
 
-void parseDAG() {
+Graph parseDAG() {
+	Graph ret;
+
 	int n, m;
 	scanf("%d %d", &n, &m);
 
 	for (int i = 0; i < n; i++)
-		dag.push_back(new Node(i));
+		ret.nodes.push_back(new Node(i));
 
 	for (int i = 0; i < m; i++) {
 		int x, y;
 		scanf("%d %d", &x, &y);
-		dag[x-1]->out.push_back(dag[y-1]);
-		dag[y-1]->in.push_back(dag[x-1]);
+		ret.nodes[x-1]->out.push_back(ret.nodes[y-1]);
+		ret.nodes[y-1]->in.push_back(ret.nodes[x-1]);
 	}
+
+	return ret;
 }
 
 int main(int argc, char *argv[]) {
-	int times = -1;
-	int seq = -1;
+	Graph dag = parseDAG();
 
-	parseDAG();
-	findSources();
-	times = sources.size();
+	dag.findSources();
+	dag.DFS_VisitSources();
+	dag.getMaxSequence();
 
-	for (Node* n : sources)
-		DFS_Visit(n);
+	printf("%d %d\n", dag.numSources, dag.maxSequence);
 
-	seq = getMaxSequence();
-	printf("%d %d\n", times, seq);
-
-	cleanGraph();
+	dag.clean();
 	return 0;
 }
