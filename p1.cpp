@@ -30,17 +30,9 @@ public:
 
 	void getMaxSequence();
 	void DFS_Visit(Node* n);
+	void DFS_VisitSources();
 	void findSources();
-
-	void DFS_VisitSources() {
-		for (Node* n : this->sources)
-			DFS_Visit(n);
-	}
-
-	void clean() {
-		for (Node* n : this->nodes)
-			delete n;
-	}
+	void clean();
 };
 
 int max_dist(Node* n) {
@@ -82,12 +74,22 @@ void Graph::DFS_Visit(Node* n) {
 	}
 }
 
+void Graph::DFS_VisitSources() {
+	for (Node* n : this->sources)
+		DFS_Visit(n);
+}
+
 void Graph::findSources() {
 	for (Node* n : this->nodes)
 		if (n->in.empty())
 			this->sources.push_back(n);
 
 	this->numSources = this->sources.size();
+}
+
+void Graph::clean() {
+	for (Node* n : this->nodes)
+		delete n;
 }
 
 Graph parseDAG() {
