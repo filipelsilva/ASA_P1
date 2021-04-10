@@ -4,6 +4,7 @@
 *.xlsx*
 vgcore*
 *.test
+complexity_ricky.txt
 
 # Prerequisites
 *.d
