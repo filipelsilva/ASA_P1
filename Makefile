@@ -1,12 +1,11 @@
 .PHONY: all clean test
 
-all: p1.cpp randomDAG.cpp report.tex
+all: p1.cpp randomDAG.cpp
 	g++ -std=c++11 -O3 -Wall p1.cpp -lm -o p1.out
 	g++ -std=c++11 -O3 -Wall randomDAG.cpp -lm -o randomDAG.out
-	pdflatex report.tex
 
-clean: p1.out randomDAG.out report.pdf
-	rm report.pdf *.out *.aux *.log
+clean: p1.out randomDAG.out
+	rm *.out
 
 test: p1.out
 	./p1.out < test.txt
