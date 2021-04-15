@@ -17,6 +17,8 @@ public:
 	Node(int id) {
 		this->id = id;
 	}
+
+	void setMaxDist();
 };
 
 class Graph {
@@ -35,20 +37,20 @@ public:
 	void clean();
 };
 
-int max_dist(Node* n) {
+void Node::setMaxDist() {
 	int max = 0;
 
-	for (Node* parent : n->in)
+	for (Node* parent : this->in)
 		if (parent->dist > max)
 			max = parent->dist;
 
-	return max;
+	this->dist = max + 1;
 }
 
 void Graph::getMaxSequence() {
 	for (auto i = this->topological.rbegin(); i != this->topological.rend(); i++) {
 		Node* n = *i;
-		n->dist = max_dist(n) + 1;
+		n->setMaxDist();
 		if (n->dist > this->maxSequence)
 			this->maxSequence = n->dist;
 	}
