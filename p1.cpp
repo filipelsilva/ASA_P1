@@ -7,34 +7,33 @@ using namespace std;
 enum colors { WHITE, GREY, BLACK };
 
 class Node {
-public:
-	int id;
-	int dist = 0;
-	colors color = WHITE;
-	vector<Node*> in = vector<Node*>();
-	vector<Node*> out = vector<Node*>();
+	public:
+		int id;
+		int dist = -1;
+		colors color = WHITE;
+		vector<Node*> in = vector<Node*>();
+		vector<Node*> out = vector<Node*>();
 
-	Node(int id) {
-		this->id = id;
-	}
+		Node(int id) {
+			this->id = id;
+		}
 
-	void setMaxDist();
+		void setMaxDist();
 };
 
 class Graph {
-public:
-	int maxSequence = -1;
-	int numSources = -1;
+	public:
+		int maxSequence = -1;
+		int numSources = -1;
+		vector<Node*> nodes = vector<Node*>();
+		vector<Node*> topological = vector<Node*>();
+		vector<Node*> sources = vector<Node*>();
 
-	vector<Node*> nodes = vector<Node*>();
-	vector<Node*> topological = vector<Node*>();
-	vector<Node*> sources = vector<Node*>();
-
-	void getMaxSequence();
-	void DFS_Visit(Node* n);
-	void DFS_VisitSources();
-	void findSources();
-	void clean();
+		void getMaxSequence();
+		void DFS_Visit(Node* n);
+		void DFS_VisitSources();
+		void findSources();
+		void clean();
 };
 
 void Node::setMaxDist() {
@@ -51,6 +50,7 @@ void Graph::getMaxSequence() {
 	for (auto i = this->topological.rbegin(); i != this->topological.rend(); i++) {
 		Node* n = *i;
 		n->setMaxDist();
+
 		if (n->dist > this->maxSequence)
 			this->maxSequence = n->dist;
 	}
